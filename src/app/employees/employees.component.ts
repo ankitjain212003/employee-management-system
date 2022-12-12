@@ -7,6 +7,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { EmployeesDataSource, EmployeesItem } from './employees-datasource';
 import { AddEditComponent } from '../add-edit/add-edit.component';
 import { DeleteComponent } from '../delete/delete.component';
+import { TransferComponent } from '../transfer/transfer.component';
 
 @Component({
   selector: 'app-employees',
@@ -88,7 +89,7 @@ export class EmployeesComponent implements AfterViewInit {
     dialogConfig.enterAnimationDuration = "300ms"
     dialogConfig.exitAnimationDuration = "300ms"
 
-    let dialogRef = this.matDialog.open(AddEditComponent, dialogConfig);
+    let dialogRef = this.matDialog.open(TransferComponent, dialogConfig);
     
     dialogRef.afterClosed().subscribe(value => {
       if(value) {

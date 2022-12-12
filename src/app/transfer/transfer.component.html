@@ -1,31 +1,10 @@
 <mat-toolbar color="primary">
-    <span class="title">Empolyee</span>
+    <span class="title">Transfer Empolyee</span>
 </mat-toolbar>
 <form class="example-form" [formGroup]="employeeForm" (ngSubmit)="add(employeeForm.value)">
 
     <mat-dialog-content>
         <mat-form-field appearance="fill" class="mx-1">
-            <mat-label>Name of Employee</mat-label>
-            <input formControlName="name" matInput #input maxlength="50" required>
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="mx-1">
-            <mat-label>Date of Birth</mat-label>
-            <input formControlName="dob" matInput [matDatepicker]="picker" required>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill" class="mx-1">
-            <mat-label>Designation</mat-label>
-            <mat-select required formControlName="designation">
-                <mat-option value="Engineer">Engineer</mat-option>
-                <mat-option value="Lead">Lead</mat-option>
-                <mat-option value="Manager">Manager</mat-option>
-                <mat-option value="Director">Director</mat-option>
-                <mat-option value="CEO">CEO</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="mx-1" *ngIf=!data.id>
             <mat-label>Location</mat-label>
             <mat-select required formControlName="location">
                 <mat-option value="Delhi">Delhi</mat-option>
