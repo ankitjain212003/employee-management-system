@@ -8,7 +8,7 @@
 <br/>
 <div class="mat-elevation-z8">
   
-  <table mat-table class="full-width-table" matSort aria-label="Elements">
+  <table mat-table class="full-width-table" matSort aria-label="Employees" [dataSource]="dataSource">
     <!-- Id Column -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>

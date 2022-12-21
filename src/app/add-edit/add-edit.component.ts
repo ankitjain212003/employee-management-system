@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { EmployeesItem } from '../employees/employees-datasource';
+import { Employ } from '../employees/employees.model';
 
 @Component({
   selector: 'app-add-edit',
@@ -15,7 +15,7 @@ export class AddEditComponent {
   constructor(
     fb: FormBuilder,
     public dialogRef: MatDialogRef<AddEditComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: EmployeesItem
+      @Inject(MAT_DIALOG_DATA) public data: Employ
     ) {
       this.employeeForm = fb.group({
         id: [data.id],
@@ -30,7 +30,7 @@ export class AddEditComponent {
     this.dialogRef.close();
   }
 
-  add(form:EmployeesItem) {
+  add(form:Employ) {
     this.dialogRef.close(form);
   }
 

@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { EmployeesItem } from '../employees/employees-datasource';
+import { Employ } from '../employees/employees.model';
 
 @Component({
   selector: 'app-transfer',
@@ -14,7 +14,7 @@ export class TransferComponent {
   constructor(
     fb: FormBuilder,
     public dialogRef: MatDialogRef<TransferComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: EmployeesItem
+      @Inject(MAT_DIALOG_DATA) public data: Employ
     ) {
       this.employeeForm = fb.group({
         id: [data.id],
@@ -29,7 +29,7 @@ export class TransferComponent {
     this.dialogRef.close();
   }
 
-  add(form:EmployeesItem) {
+  add(form:Employ) {
     this.dialogRef.close(form);
   }
 }

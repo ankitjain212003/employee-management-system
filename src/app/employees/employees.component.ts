@@ -1,22 +1,23 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { OnInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTable } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
-import { EmployeesDataSource, EmployeesItem } from './employees-datasource';
+import { Employ } from './employees.model';
 import { AddEditComponent } from '../add-edit/add-edit.component';
 import { DeleteComponent } from '../delete/delete.component';
 import { TransferComponent } from '../transfer/transfer.component';
+import { EmployeesService } from './employees.service';
 
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
   styleUrls: ['./employees.component.css']
 })
-export class EmployeesComponent implements AfterViewInit {
+export class EmployeesComponent implements OnInit {
 
-  defaultEmployee:EmployeesItem = {
+  defaultEmployee:Employ = {
     designation: null,
     location: null,
     name: "",
@@ -26,23 +27,25 @@ export class EmployeesComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<EmployeesItem>;
-  dataSource: EmployeesDataSource;
+  @ViewChild(MatTable) table!: MatTable<Employ>;
+  dataSource = new MatTableDataSource<Employ>([]);
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['id', 'name', 'dob', 'designation', 'location', 'Action'];
 
-  constructor(private matDialog: MatDialog) {
-    this.dataSource = new EmployeesDataSource();
+  constructor(
+    private matDialog: MatDialog,
+    private employeesService: EmployeesService
+    ) {
+    this.employeesService.getEmployees().subscribe(employees => this.dataSource.data = employees);
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    this.table.dataSource = this.dataSource;
   }
 
-  addEdit(employee: EmployeesItem) {
+  addEdit(employee: Employ) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = employee;
     dialogConfig.enterAnimationDuration = "300ms"
@@ -50,40 +53,40 @@ export class EmployeesComponent implements AfterViewInit {
 
     let dialogRef = this.matDialog.open(AddEditComponent, dialogConfig);
     
-    dialogRef.afterClosed().subscribe(value => {
-      if(value) {
-        if (value.id ===0){
-          value.id = this.dataSource.data[this.dataSource.data.length -1].id+1
-          this.dataSource.data.push(value)
-          this.table.dataSource = this.dataSource.data
+    dialogRef.afterClosed().subscribe(employ => {
+      if(employ) {
+        if (employ.id ===0){
+          let lastIndex = this.dataSource.data.length - 1
+          employ.id = this.dataSource.data[lastIndex].id + 1
+          this.employeesService.createEmploy(employ).subscribe(response => {
+            this.employeesService.getEmployees().subscribe(employees => this.dataSource.data = employees);
+          })
         } else {
-          let ele = this.dataSource.data.filter(x => x.id === value.id)[0]
-          ele.name = value.name
-          ele.dob = value.dob
-          ele.location = value.location
-          ele.designation = value.designation
+          this.employeesService.editEmploy(employ).subscribe(employee => {
+            this.employeesService.getEmployees().subscribe(employees => this.dataSource.data = employees);
+          })
         }
       } 
     });
   }
 
-  delete(employee: EmployeesItem){
+  delete(employee: Employ){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.role = 'alertdialog'
     dialogConfig.enterAnimationDuration = "300ms"
     dialogConfig.exitAnimationDuration = "300ms"
     
     let dialogRef = this.matDialog.open(DeleteComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(value => {
-      if(value) {
-        let index = this.dataSource.data.findIndex(x => x.id === employee.id);
-        this.dataSource.data.splice(index, 1)
-        this.table.dataSource = this.dataSource.data
+    dialogRef.afterClosed().subscribe(employ => {
+      if(employ) {
+        this.employeesService.deleteEmploy(employ.id).subscribe(employee =>{
+          this.employeesService.getEmployees().subscribe(employees => this.dataSource.data = employees);
+        })
       }
     })
   }
 
-  transfer(employee:EmployeesItem){
+  transfer(employee:Employ){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = employee;
     dialogConfig.enterAnimationDuration = "300ms"
@@ -91,10 +94,12 @@ export class EmployeesComponent implements AfterViewInit {
 
     let dialogRef = this.matDialog.open(TransferComponent, dialogConfig);
     
-    dialogRef.afterClosed().subscribe(value => {
-      if(value) {
-          let ele = this.dataSource.data.filter(x => x.id === value.id)[0]
-          ele.location = value.location
+    dialogRef.afterClosed().subscribe(employ => {
+      if(employ) { 
+        this.employeesService.editEmploy(employ).subscribe(response => {
+          console.log(response)
+          this.employeesService.getEmployees().subscribe(employees => this.dataSource.data = employees);
+        })
       } 
     });
   }

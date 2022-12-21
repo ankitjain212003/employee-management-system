@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
+
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -22,13 +23,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { EmployeesComponent } from './employees/employees.component';
 import { AddEditComponent } from './add-edit/add-edit.component';
 import { DeleteComponent } from './delete/delete.component';
 import { TransferComponent } from './transfer/transfer.component'
 
+import { AppService } from './app.service';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 
 @NgModule({
   declarations: [
@@ -45,6 +50,8 @@ import { TransferComponent } from './transfer/transfer.component'
     AppRoutingModule,
     BrowserAnimationsModule,
     LayoutModule,
+    HttpClientModule,
+
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
@@ -62,6 +69,8 @@ import { TransferComponent } from './transfer/transfer.component'
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
+
+    HttpClientInMemoryWebApiModule.forRoot(AppService),
   ],
   providers: [],
   bootstrap: [AppComponent],
