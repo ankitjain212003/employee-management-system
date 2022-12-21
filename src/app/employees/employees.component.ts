@@ -57,7 +57,7 @@ export class EmployeesComponent implements OnInit {
       if(employ) {
         if (employ.id ===0){
           let lastIndex = this.dataSource.data.length - 1
-          employ.id = this.dataSource.data[lastIndex].id + 1
+          employ.id = (this.dataSource.data[lastIndex]?.id || 0) + 1
           this.employeesService.createEmploy(employ).subscribe(response => {
             this.employeesService.getEmployees().subscribe(employees => this.dataSource.data = employees);
           })
@@ -70,7 +70,7 @@ export class EmployeesComponent implements OnInit {
     });
   }
 
-  delete(employee: Employ){
+  remove(employee: Employ){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.role = 'alertdialog'
     dialogConfig.enterAnimationDuration = "300ms"
@@ -79,7 +79,7 @@ export class EmployeesComponent implements OnInit {
     let dialogRef = this.matDialog.open(DeleteComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(employ => {
       if(employ) {
-        this.employeesService.deleteEmploy(employ.id).subscribe(employee =>{
+        this.employeesService.deleteEmploy(employee.id).subscribe(employee =>{
           this.employeesService.getEmployees().subscribe(employees => this.dataSource.data = employees);
         })
       }

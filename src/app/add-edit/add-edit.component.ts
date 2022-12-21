@@ -31,7 +31,9 @@ export class AddEditComponent {
   }
 
   add(form:Employ) {
-    this.dialogRef.close(form);
+    if (this.employeeForm.valid){
+      this.dialogRef.close(form);
+    }
   }
 
 }
